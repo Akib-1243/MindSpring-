@@ -11,13 +11,13 @@ function FacultyLogin() {
         <a className="back-link" href="/">← Back to Relavanet Uni</a>
         <div className="faculty-login-wrap">
             <div className="faculty-intro"><div className="eyebrow"><span className="eyebrow-dot" /> RELAVANET UNIVERSITY · FACULTY SERVICES</div><h1>Make every<br /><em>question</em> count.</h1><p>Access the Academic Quality Control Suite to compare syllabi, review assessment risk, and build stronger learning experiences.</p><div className="faculty-note"><strong>Faculty portal</strong><span>Secure workspace for curriculum teams and teaching staff.</span></div></div>
-            <form className="faculty-form" onSubmit={async (event) => { event.preventDefault(); setError(''); const form = new FormData(event.currentTarget); try { const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/faculty/login`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) }); if (!response.ok) throw new Error('Invalid faculty credentials.'); const data = await response.json(); localStorage.setItem('relavanet_token', data.token); window.location.href = '/faculty-dashboard' } catch (requestError) { setError(requestError.message) } }}><div className="section-label">/ SIGN IN</div><h2>Welcome back.</h2><p>Use your university credentials to continue.</p><label>University email<input name="email" type="email" placeholder="name@relavanet.edu" required /></label><label>Password<input name="password" type="password" placeholder="Enter your password" required /></label><div className="form-row"><label className="check-label"><input type="checkbox" /> Remember me</label><a href="mailto:it@relavanet.edu">Need help?</a></div><button className="primary-button" type="submit">Enter faculty portal <span>↗</span></button>{error && <div className="form-error">{error}</div>}</form>
+            <form className="faculty-form" onSubmit={async (event) => { event.preventDefault(); setError(''); const form = new FormData(event.currentTarget); try { const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/faculty/login`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) }); if (!response.ok) throw new Error('Invalid faculty credentials.'); const data = await response.json(); localStorage.setItem('relavanet_token', data.token); window.location.href = '/faculty-dashboard' } catch (requestError) { setError(requestError instanceof TypeError ? 'Unable to reach the faculty service. Please check that the backend is running.' : requestError.message) } }}><div className="section-label">/ SIGN IN</div><h2>Welcome back.</h2><p>Use your university credentials to continue.</p><label>University email<input name="email" type="email" placeholder="name@relavanet.edu" required /></label><label>Password<input name="password" type="password" placeholder="Enter your password" required /></label><div className="form-row"><label className="check-label"><input type="checkbox" /> Remember me</label><a href="mailto:it@relavanet.edu">Need help?</a></div><button className="primary-button" type="submit">Enter faculty portal <span>↗</span></button>{error && <div className="form-error">{error}</div>}</form>
         </div>
     </div>
 }
 
 function AdminDashboard() {
-    const api = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+    const api = import.meta.env.VITE_API_URL || '/api'
     const [token, setToken] = useState(localStorage.getItem('relavanet_admin_token'))
     const [email, setEmail] = useState('admin@relavanet.edu')
     const [password, setPassword] = useState('')
@@ -78,7 +78,7 @@ function QuestionLedgerDetail({ question, course, onClose }) {
     return <aside className="ledger-detail"><div className="detail-heading"><div><span className="ledger-kicker">Question record</span><h2>{question.question_code}</h2></div><button className="ledger-close" type="button" onClick={onClose} aria-label="Close question detail">×</button></div><p className="detail-course">{course.code} · {course.name}</p><p className="detail-question">{question.question_text}</p><div className="detail-rule" /><div className="bloom-block"><span className="ledger-kicker">Bloom's taxonomy</span><div className="bloom-ladder">{levels.map((level, index) => <div className={`bloom-rung ${index === levelIndex ? 'current' : ''}`} key={level}><span>{index + 1}</span><strong>{level}</strong>{index === levelIndex && <em>current level</em>}</div>)}</div></div><div className="outcome-line"><span className="ledger-kicker">Learning outcome</span><strong>{question.topic || 'General course outcome'}</strong><span>Tested once in this question record</span></div></aside>
 }
 
-function FacultyChat({ api = import.meta.env.VITE_API_URL || 'http://localhost:8000/api', token = localStorage.getItem('relavanet_token') }) {
+function FacultyChat({ api = import.meta.env.VITE_API_URL || '/api', token = localStorage.getItem('relavanet_token') }) {
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([{ role: 'assistant', text: 'Ask me about curriculum alignment, assessment quality, or exam design.' }])
@@ -120,7 +120,7 @@ function FacultyDashboard() {
     const [history, setHistory] = useState({ exams: [], syllabi: [] })
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
-    const api = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+    const api = import.meta.env.VITE_API_URL || '/api'
     const token = localStorage.getItem('relavanet_token')
 
     const loadDashboard = useCallback(() => fetch(`${api}/faculty/dashboard`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }).then((response) => response.ok ? response.json() : Promise.reject(new Error('Unable to load faculty data.'))).then((data) => { setCourses(data.courses || []); setHistory({ exams: data.recent_exam_analyses || [], syllabi: data.recent_syllabus_analyses || [] }) }).catch((requestError) => setError(requestError.message)), [api, token])
@@ -132,6 +132,27 @@ function FacultyDashboard() {
     const courseName = (id) => courses.find((course) => course.id === id)?.code || 'Course'
 
     return <div className="dashboard-page"><header className="dashboard-header"><a className="brand" href="/"><span className="brand-mark">R</span><span>relavanet<span className="brand-light">uni</span></span></a><div><span className="faculty-status">FACULTY WORKSPACE</span><button className="logout-link" onClick={() => { localStorage.removeItem('relavanet_token'); window.location.href = '/faculty-login' }}>Sign out</button></div></header><main className="dashboard-main"><div className="dashboard-intro"><div className="section-label">/ ACADEMIC QUALITY CONTROL SUITE</div><h1>Good morning,<br /><em>faculty.</em></h1><p>Make assessment decisions with a clearer view of curriculum overlap, alignment, and risk.</p></div><div className="tool-switcher"><button className={tool === 'exam' ? 'active' : ''} onClick={() => { setTool('exam'); setResult(null) }}><span>01</span><strong>Exam forensics</strong><small>Check originality and syllabus alignment.</small></button><button className={tool === 'syllabus' ? 'active' : ''} onClick={() => { setTool('syllabus'); setResult(null) }}><span>02</span><strong>Syllabus duet</strong><small>Find overlap and strategic edges.</small></button></div><form className="analysis-form" onSubmit={analyze}><div className="section-label">/ {tool === 'exam' ? 'NEW FORENSIC ANALYSIS' : 'NEW SYLLABUS COMPARISON'}</div>{tool === 'exam' ? <><label>Course<select name="course_id" required><option value="">Select a course</option>{courses.map((course) => <option value={course.id} key={course.id}>{course.code} · {course.name}</option>)}</select></label><label>New exam question<textarea name="new_question" rows="5" placeholder="Paste the question you want to audit..." required /></label></> : <div className="course-pair"><label>Source A<select name="course_a_id" required><option value="">Select a course</option>{courses.map((course) => <option value={course.id} key={course.id}>{course.code} · {course.name}</option>)}</select></label><label>Source B<select name="course_b_id" required><option value="">Select a course</option>{courses.map((course) => <option value={course.id} key={course.id}>{course.code} · {course.name}</option>)}</select></label></div>}<button className="primary-button" type="submit">Run analysis <span>↗</span></button>{error && <p className="analysis-error">{error}</p>}</form>{result && <AnalysisResult result={result} courseName={courseName} />}<section className="history-section"><div className="history-heading"><div><div className="section-label">/ SAVED REPORTS</div><h2>Recent analysis</h2></div><span>{history.exams.length + history.syllabi.length} reports</span></div><div className="history-grid">{history.exams.map((analysis) => <button className="history-card" key={`exam-${analysis.id}`} onClick={() => { setTool('exam'); setResult({ type: 'exam', data: analysis }) }}><span className="history-type">EXAM FORENSICS</span><strong>{analysis.overall_verdict}</strong><small>{courseName(analysis.course_id)} · {analysis.created_at?.slice(0, 10)}</small><div className="mini-scores"><span>Similarity <b>{analysis.similarity_score}%</b></span><span>Coverage <b>{analysis.syllabus_coverage_score}%</b></span></div></button>)}{history.syllabi.map((analysis) => <button className="history-card" key={`syllabus-${analysis.id}`} onClick={() => { setTool('syllabus'); setResult({ type: 'syllabus', data: analysis }) }}><span className="history-type">SYLLABUS DUET</span><strong>{analysis.overlaps?.length || 0} overlaps found</strong><small>{analysis.course_a?.code || 'Source A'} + {analysis.course_b?.code || 'Source B'} · {analysis.created_at?.slice(0, 10)}</small><div className="mini-scores"><span>Unique A <b>{analysis.unique_to_a?.length || 0}</b></span><span>Unique B <b>{analysis.unique_to_b?.length || 0}</b></span></div></button>)}{history.exams.length + history.syllabi.length === 0 && <p className="empty-history">No saved reports yet. Run an analysis to create the first one.</p>}</div></section></main></div>
+}
+
+function RoleGuard({ role, children }) {
+    const [allowed, setAllowed] = useState(null)
+    const api = import.meta.env.VITE_API_URL || '/api'
+    const tokenKey = role === 'admin' ? 'relavanet_admin_token' : 'relavanet_token'
+
+    useEffect(() => {
+        const token = localStorage.getItem(tokenKey)
+        if (!token) { window.location.href = role === 'admin' ? '/admin-dashboard' : '/faculty-login'; return }
+        fetch(`${api}/faculty/me`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }).then(async (response) => {
+            if (!response.ok) throw new Error('Unauthorized')
+            return response.json()
+        }).then((user) => {
+            if (user.role !== role) { window.location.href = user.role === 'admin' ? '/admin-dashboard' : '/faculty-dashboard'; return }
+            setAllowed(true)
+        }).catch(() => { localStorage.removeItem(tokenKey); window.location.href = role === 'admin' ? '/admin-dashboard' : '/faculty-login' })
+    }, [api, role, tokenKey])
+
+    if (!allowed) return <div className="dashboard-page role-loading"><p>Checking workspace access...</p></div>
+    return children
 }
 
 function AnalysisResult({ result, courseName }) {
@@ -150,8 +171,8 @@ function App() {
     }, [])
 
     if (window.location.pathname === '/faculty-login') return <FacultyLogin />
-    if (window.location.pathname === '/admin-dashboard') return <AdminDashboard />
-    if (window.location.pathname === '/faculty-dashboard') return <><FacultyDashboard /><FacultyChat /></>
+    if (window.location.pathname === '/admin-dashboard') return <RoleGuard role="admin"><AdminDashboard /></RoleGuard>
+    if (window.location.pathname === '/faculty-dashboard') return <RoleGuard role="faculty"><><FacultyDashboard /><FacultyChat /></></RoleGuard>
 
     const scrollTo = (id) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
 

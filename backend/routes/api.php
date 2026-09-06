@@ -12,7 +12,8 @@ use App\Http\Controllers\AdminController;
 Route::prefix('faculty')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->get('/me', [AuthController::class, 'me']);
+    Route::middleware(['auth:sanctum', 'role:faculty'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/dashboard', DashboardController::class);
         Route::apiResource('courses', CourseController::class)->only(['index', 'store', 'show']);
@@ -22,7 +23,7 @@ Route::prefix('faculty')->group(function () {
     });
 });
 
-Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/question-bank', [AdminController::class, 'questionBank']);
     Route::post('/courses', [AdminController::class, 'storeCourse']);
     Route::put('/courses/{course}', [AdminController::class, 'updateCourse']);

@@ -12,7 +12,7 @@ class ExamForensicController extends Controller
     public function analyze(Request $request, AIAnalysisService $ai)
     {
         $data = $request->validate(['course_id' => 'required|exists:courses,id', 'new_question' => 'required|string|min:10']);
-        $course = Course::where('id', $data['course_id'])->where('user_id', $request->user()->id)->with(['pastPapers', 'questionBank'])->firstOrFail();
+        $course = Course::where('id', $data['course_id'])->with(['pastPapers', 'questionBank'])->firstOrFail();
         $pastPapers = $course->pastPapers->map(fn ($paper) => $paper->year.': '.$paper->question_text)->implode("\n---\n");
         $questionBank = $course->questionBank->map(fn ($item) => $item->question_code.' | '.$item->topic.' | '.$item->question_text)->implode("\n---\n");
         $result = $ai->analyzeExamForensic($data['new_question'], $pastPapers, $questionBank, $course->syllabus_raw);

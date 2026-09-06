@@ -17,6 +17,11 @@ class AuthController extends Controller
         return response()->json(['user' => $user, 'token' => $user->createToken('faculty-portal')->plainTextToken]);
     }
 
+    public function me(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
     public function register(Request $request)
     {
         $data = $request->validate(['name' => 'required|string|max:120', 'email' => 'required|email|unique:users', 'password' => 'required|string|min:8', 'department' => 'nullable|string|max:120']);
