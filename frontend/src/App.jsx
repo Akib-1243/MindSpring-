@@ -35,6 +35,7 @@ function AdminDashboard() {
         const response = await fetch(`${api}/admin/question-bank`, { headers: { Authorization: `Bearer ${adminToken}`, Accept: 'application/json' } })
         const data = await response.json()
         if (!response.ok) throw new Error(data.message || 'Admin access is required.')
+        setError('')
         setCourses(data.courses || [])
         setFaculty(data.faculty || [])
         setDepartments(data.departments || [])

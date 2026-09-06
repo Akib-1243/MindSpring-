@@ -344,7 +344,7 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
 .question-row:nth-child(4n) .coverage-bar i { background: #6b2d2d; }
 .row-actions { justify-content: flex-start; }
 .row-actions .admin-action { padding: 5px 8px; font-size: 12px; }
-.ledger-detail { position: sticky; top: 25px; border-top: 1px solid #1c2430; border-bottom: 1px solid #1c2430; padding: 18px 0 25px; background: #f7f5f0; }
+.ledger-detail { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow-y: auto; border-top: 1px solid #1c2430; border-bottom: 1px solid #1c2430; padding: 18px 0 25px; background: #f7f5f0; z-index: 2; }
 .detail-heading { display: flex; justify-content: space-between; align-items: start; }
 .detail-heading h2 { margin: 8px 0 0; color: #1c2430; font: 600 23px 'IBM Plex Sans'; font-variant-numeric: tabular-nums; }
 .ledger-close { border: 0; color: #1c2430; background: transparent; cursor: pointer; font: 400 25px 'IBM Plex Sans'; }
@@ -375,7 +375,7 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
 }
 
 /* Faculty dashboard language carried into the Academic Ledger. */
-.admin-page { position: relative; overflow: hidden; color: #14211c; background: #f5f6f1; }
+.admin-page { position: relative; overflow-x: hidden; color: #14211c; background: #f5f6f1; }
 .admin-page::before { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .34; background-image: linear-gradient(#dfe4dc 1px, transparent 1px); background-size: 100% 42px; content: ''; }
 .admin-page>* { position: relative; z-index: 1; }
 .admin-page .dashboard-header { color: #f5f6f1; border-bottom-color: #14211c; background: #14211c; }
