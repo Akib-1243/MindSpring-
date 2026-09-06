@@ -1,0 +1,36 @@
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── DashboardController.php
+│   │   ├── SyllabusAnalysisController.php
+│   │   └── ExamForensicController.php
+│   └── Requests/
+│       ├── SyllabusCompareRequest.php
+│       └── ExamAnalyzeRequest.php
+├── Models/
+│   ├── User.php
+│   ├── Course.php
+│   ├── PastPaper.php
+│   ├── SyllabusAnalysis.php
+│   └── ExamAnalysis.php
+└── Services/
+    └── AIAnalysisService.php  <-- Core logic for AI communication
+config/
+└── ai.php                     <-- API Keys and Prompt templates
+resources/
+├── views/
+│   ├── layouts/
+│   │   └── app.blade.php
+│   ├── dashboard.blade.php
+│   └── analysis/
+│       ├── syllabus.blade.php
+│       └── exam.blade.php
+routes/
+└── web.php                    <-- Define all routes here
+database/
+└── migrations/
+    ├── create_users_table.php
+    ├── create_courses_table.php
+    ├── create_past_papers_table.php
+    ├── create_syllabus_analyses_table.php
+    └── create_exam_analyses_table.php
