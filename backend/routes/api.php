@@ -6,6 +6,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamForensicController;
 use App\Http\Controllers\SyllabusAnalysisController;
+use App\Http\Controllers\FacultyChatController;
 
 Route::prefix('faculty')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -16,6 +17,7 @@ Route::prefix('faculty')->group(function () {
         Route::apiResource('courses', CourseController::class)->only(['index', 'store', 'show']);
         Route::post('/syllabus/analyze', [SyllabusAnalysisController::class, 'analyze']);
         Route::post('/exam/analyze', [ExamForensicController::class, 'analyze']);
+        Route::post('/chat', FacultyChatController::class);
     });
 });
 
