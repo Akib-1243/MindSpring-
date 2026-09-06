@@ -222,6 +222,7 @@ function App() {
             <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">☰</button>
             <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
                 {['Study', 'Research', 'About'].map((item) => <a href={`#${item.toLowerCase()}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
+                <a className="faculty-login-icon" href="/faculty-login" aria-label="Faculty login" title="Faculty login" onClick={() => setMenuOpen(false)}><span aria-hidden="true">♙</span><small>Faculty</small></a>
             </div>
         </nav>
 

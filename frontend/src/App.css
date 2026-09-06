@@ -20,6 +20,10 @@
 .nav-links { display: flex; align-items: center; gap: 34px; color: #65716a; font-size: 14px; font-weight: 600; }
 .nav-links a { transition: color .25s; }
 .nav-links a:hover { color: #14211c; }
+.faculty-login-icon { display: inline-flex; align-items: center; gap: 7px; border-left: 1px solid #dfe4dc; padding-left: 18px; color: #14211c !important; }
+.faculty-login-icon span { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid #d76045; border-radius: 50%; color: #d76045; font-size: 16px; }
+.faculty-login-icon small { font-size: 12px; font-weight: 700; }
+.faculty-login-icon:hover span { color: #14211c; background: #e6f04d; }
 .nav-login, .primary-button { border: 0; cursor: pointer; color: #14211c; background: #e6f04d; font-weight: 800; border-radius: 7px; padding: 14px 18px; transition: transform .25s, box-shadow .25s, background .25s; }
 .nav-login span, .primary-button span { margin-left: 18px; font-size: 17px; }
 .nav-login:hover, .primary-button:hover { transform: translateY(-3px); box-shadow: 0 10px 24px #aeba2d45; background: #f1f795; }
@@ -228,6 +232,7 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
     .nav-links { display: none; position: absolute; top: 70px; right: 0; left: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 14px; border: 1px solid #dfe4dc; border-radius: 10px; background: #fffdf8; }
     .nav-links.open { display: flex; }
     .nav-links a { padding: 12px; }
+    .faculty-login-icon { border-top: 1px solid #dfe4dc; border-left: 0; padding: 12px; }
     .nav-login { margin-top: 8px; }
     .hero { display: block; padding-top: 55px; }
     .hero-visual { height: 450px; margin-top: 35px; }
