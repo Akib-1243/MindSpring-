@@ -16,6 +16,42 @@ function FacultyLogin() {
     </div>
 }
 
+function FacultyChat({ api = import.meta.env.VITE_API_URL || 'http://localhost:8000/api', token = localStorage.getItem('relavanet_token') }) {
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState('')
+    const [messages, setMessages] = useState([{ role: 'assistant', text: 'Ask me about curriculum alignment, assessment quality, or exam design.' }])
+    const [loading, setLoading] = useState(false)
+    const startNewSession = () => { setMessages([{ role: 'assistant', text: 'Ask me about curriculum alignment, assessment quality, or exam design.' }]); setMessage(''); setLoading(false); setOpen(false) }
+
+    const sendMessage = async (event) => {
+        event.preventDefault()
+        const trimmedMessage = message.trim()
+        if (!trimmedMessage || loading) return
+        setMessages((current) => [...current, { role: 'user', text: trimmedMessage }])
+        setMessage('')
+        setLoading(true)
+        try {
+            const response = await fetch(`${api}/faculty/chat`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ message: trimmedMessage }) })
+            const data = await response.json()
+            if (!response.ok) throw new Error(data.message || 'The assistant could not respond.')
+            setMessages((current) => [...current, { role: 'assistant', text: data.reply }])
+        } catch (requestError) {
+            setMessages((current) => [...current, { role: 'assistant', text: requestError.message }])
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return <div className={`faculty-chat ${open ? 'is-open' : ''}`}>
+        {open && <section className="faculty-chat-panel" aria-label="Faculty AI assistant">
+            <header className="faculty-chat-header"><div><span className="chat-spark">✦</span><div><strong>Faculty assistant</strong><small>Powered by gpt-4o-mini</small></div></div><div className="faculty-chat-actions"><button type="button" onClick={() => setOpen(false)} aria-label="Minimize assistant" title="Minimize">−</button><button type="button" onClick={startNewSession} aria-label="Exit and start a new session" title="Exit session">×</button></div></header>
+            <div className="faculty-chat-messages">{messages.map((item, index) => <div className={`chat-message ${item.role}`} key={`${item.role}-${index}`}>{item.text}</div>)}{loading && <div className="chat-message assistant chat-loading">Thinking<span>...</span></div>}</div>
+            <form className="faculty-chat-form" onSubmit={sendMessage}><input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Ask a faculty question..." aria-label="Message the faculty assistant" /><button type="submit" disabled={loading || !message.trim()} aria-label="Send message">↗</button></form>
+        </section>}
+        <button className="faculty-chat-launcher" type="button" onClick={() => setOpen((current) => !current)} aria-label={open ? 'Minimize faculty assistant' : 'Open faculty assistant'}><span>{open ? '−' : '✦'}</span></button>
+    </div>
+}
+
 function FacultyDashboard() {
     const [courses, setCourses] = useState([])
     const [tool, setTool] = useState('exam')
@@ -52,7 +88,7 @@ function App() {
     }, [])
 
     if (window.location.pathname === '/faculty-login') return <FacultyLogin />
-    if (window.location.pathname === '/faculty-dashboard') return <FacultyDashboard />
+    if (window.location.pathname === '/faculty-dashboard') return <><FacultyDashboard /><FacultyChat /></>
 
     const scrollTo = (id) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
 
