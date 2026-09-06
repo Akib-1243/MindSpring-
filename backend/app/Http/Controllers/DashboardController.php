@@ -11,6 +11,6 @@ class DashboardController extends Controller
 {
     public function __invoke(Request $request)
     {
-        return response()->json(['courses' => Course::with(['department:id,code,name'])->withCount('pastPapers')->orderBy('code')->get(), 'recent_exam_analyses' => ExamAnalysis::where('user_id', $request->user()->id)->latest()->limit(5)->get(), 'recent_syllabus_analyses' => SyllabusAnalysis::where('user_id', $request->user()->id)->with(['courseA:id,code,name', 'courseB:id,code,name'])->latest()->limit(5)->get()]);
+        return response()->json(['courses' => Course::where('user_id', $request->user()->id)->with(['department:id,code,name', 'pastPapers:id,course_id,year,term,question_text', 'questionBank' => fn ($query) => $query->orderBy('question_code')])->withCount('pastPapers')->orderBy('code')->get(['id', 'user_id', 'department_id', 'code', 'name', 'syllabus_raw']), 'recent_exam_analyses' => ExamAnalysis::where('user_id', $request->user()->id)->latest()->limit(5)->get(), 'recent_syllabus_analyses' => SyllabusAnalysis::where('user_id', $request->user()->id)->with(['courseA:id,code,name', 'courseB:id,code,name'])->latest()->limit(5)->get()]);
     }
 }
