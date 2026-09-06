@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\ExamAnalysis;
 use App\Models\PastPaper;
 use App\Models\SyllabusAnalysis;
+use App\Models\QuestionBankItem;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,11 +18,15 @@ class DatabaseSeeder extends Seeder
         $password = Hash::make('relavanet-demo');
         $cseFaculty = User::updateOrCreate(
             ['email' => 'faculty@relavanet.edu'],
-            ['name' => 'Dr. Amara Okafor', 'department' => 'Computer Science and Engineering', 'password' => $password]
+            ['name' => 'Dr. Amara Okafor', 'department' => 'Computer Science and Engineering', 'role' => 'faculty', 'password' => $password]
         );
         $eeeFaculty = User::updateOrCreate(
             ['email' => 'eee.faculty@relavanet.edu'],
-            ['name' => 'Prof. Vikram Sen', 'department' => 'Electrical and Electronics Engineering', 'password' => $password]
+            ['name' => 'Prof. Vikram Sen', 'department' => 'Electrical and Electronics Engineering', 'role' => 'faculty', 'password' => $password]
+        );
+        User::updateOrCreate(
+            ['email' => 'admin@relavanet.edu'],
+            ['name' => 'Relavanet Academic Admin', 'department' => 'Academic Quality Office', 'role' => 'admin', 'password' => $password]
         );
 
         $courses = [];
@@ -57,6 +62,28 @@ class DatabaseSeeder extends Seeder
             PastPaper::updateOrCreate(
                 ['course_id' => $courses[$code]->id, 'year' => $year, 'term' => $term],
                 ['question_text' => $question]
+            );
+        }
+
+        $questionBank = [
+            ['CSE101', 'QB-CSE101-01', 'Explain the difference between stack and heap memory in C with a practical example.', 'Memory management', 'medium', 'descriptive', 10, 12],
+            ['CSE101', 'QB-CSE101-02', 'Write a recursive function to calculate the height of a binary tree and analyze its complexity.', 'Recursion', 'hard', 'coding', 15, 14],
+            ['CSE202', 'QB-CSE202-01', 'Compare merge sort, quick sort, and heap sort in terms of time and space complexity.', 'Sorting algorithms', 'medium', 'descriptive', 12, 16],
+            ['CSE202', 'QB-CSE202-02', 'Design a graph traversal solution that detects cycles in a directed graph.', 'Graph algorithms', 'hard', 'coding', 15, 15],
+            ['CSE401', 'QB-CSE401-01', 'Explain how demographic parity and equalized odds can produce conflicting fairness outcomes.', 'Model fairness', 'hard', 'descriptive', 12, 18],
+            ['CSE401', 'QB-CSE401-02', 'Design an evaluation plan for an explainable machine learning system used in healthcare.', 'Explainability', 'hard', 'case study', 15, 16],
+            ['CSE401', 'QB-CSE401-03', 'Explain how fairness metrics can conflict when evaluating a machine learning model.', 'Model fairness', 'hard', 'descriptive', 12, 15],
+            ['EEE101', 'QB-EEE101-01', 'Apply Thevenin theorem to determine load current in a DC network.', 'Network theorems', 'medium', 'problem solving', 10, 14],
+            ['EEE101', 'QB-EEE101-02', 'Derive the resonant frequency and bandwidth of a series RLC circuit.', 'AC circuits', 'hard', 'derivation', 12, 14],
+            ['EEE203', 'QB-EEE203-01', 'Minimize a four-variable Boolean expression using a Karnaugh map.', 'Boolean algebra', 'medium', 'problem solving', 10, 16],
+            ['EEE203', 'QB-EEE203-02', 'Design a synchronous decade counter using JK flip-flops and show its state transitions.', 'Sequential circuits', 'hard', 'design', 15, 18],
+            ['EEE402', 'QB-EEE402-01', 'Explain the causes and mitigation strategies for voltage instability in a transmission network.', 'Power system stability', 'hard', 'descriptive', 12, 17],
+            ['EEE402', 'QB-EEE402-02', 'Compare overcurrent and distance protection for a high-voltage transmission line.', 'Protection systems', 'medium', 'comparative', 10, 15],
+        ];
+        foreach ($questionBank as [$code, $questionCode, $questionText, $topic, $difficulty, $type, $marks, $coverage]) {
+            QuestionBankItem::updateOrCreate(
+                ['course_id' => $courses[$code]->id, 'question_code' => $questionCode],
+                ['question_text' => $questionText, 'topic' => $topic, 'difficulty' => $difficulty, 'question_type' => $type, 'marks' => $marks, 'estimated_coverage_percent' => $coverage]
             );
         }
 

@@ -36,9 +36,9 @@ class AIAnalysisService
         return $this->callOpenAI('Compare these university syllabi. Return JSON with overlaps (array of concept, risk_level, explanation), unique_to_a (array of strings), unique_to_b (array of strings), and strategic_advice (string).\n\nSYLLABUS A:\n'.$syllabusA.'\n\nSYLLABUS B:\n'.$syllabusB);
     }
 
-    public function analyzeExamForensic(string $newQuestion, string $pastPapers, string $syllabus): array
+    public function analyzeExamForensic(string $newQuestion, string $pastPapers, string $questionBank, string $syllabus): array
     {
-        return $this->callOpenAI('Audit this exam question against the syllabus and past papers. Return JSON with similarity_score (0-100), syllabus_coverage_score (0-100), matching_previous_questions (array of year, similarity_percent, explanation), risk_flags (array of strings), and overall_verdict (Safe, Needs Rewording, or High Risk).\n\nNEW QUESTION:\n'.$newQuestion.'\n\nPAST PAPERS:\n'.$pastPapers.'\n\nSYLLABUS:\n'.$syllabus);
+        return $this->callOpenAI('Audit this exam question against the syllabus, previous exam papers, and question bank. Return JSON only with similarity_score (0-100), syllabus_coverage_score (0-100), question_bank_similarity_score (0-100), question_bank_coverage_score (0-100), matching_previous_questions (array of year, similarity_percent, explanation), question_bank_matches (array of question_code, similarity_percent, explanation), covered_topics (array of topic, coverage_percent, evidence), uncovered_topics (array of topic, reason), risk_flags (array of strings), analysis_summary (string), and overall_verdict (Safe, Needs Rewording, or High Risk). Percentages must be integers.\n\nNEW QUESTION:\n'.$newQuestion.'\n\nPREVIOUS EXAM PAPERS:\n'.$pastPapers.'\n\nQUESTION BANK:\n'.$questionBank.'\n\nSYLLABUS:\n'.$syllabus);
     }
 
     private function callOpenAI(string $prompt): array

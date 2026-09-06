@@ -16,6 +16,68 @@ function FacultyLogin() {
     </div>
 }
 
+function AdminDashboard() {
+    const api = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+    const [token, setToken] = useState(localStorage.getItem('relavanet_admin_token'))
+    const [email, setEmail] = useState('admin@relavanet.edu')
+    const [password, setPassword] = useState('')
+    const [courses, setCourses] = useState([])
+    const [faculty, setFaculty] = useState([])
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [editingCourse, setEditingCourse] = useState(null)
+    const [editingQuestion, setEditingQuestion] = useState(null)
+    const [selectedQuestion, setSelectedQuestion] = useState(null)
+
+    const loadQuestionBank = async (adminToken) => {
+        const response = await fetch(`${api}/admin/question-bank`, { headers: { Authorization: `Bearer ${adminToken}`, Accept: 'application/json' } })
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.message || 'Admin access is required.')
+        setCourses(data.courses || [])
+        setFaculty(data.faculty || [])
+    }
+
+    const adminRequest = async (path, method, payload) => {
+        const response = await fetch(`${api}${path}`, { method, headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' }, body: payload ? JSON.stringify(payload) : undefined })
+        if (!response.ok) { const data = await response.json().catch(() => ({})); throw new Error(data.message || 'Admin action failed.') }
+        return response.status === 204 ? null : response.json()
+    }
+
+    const saveCourse = async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const payload = Object.fromEntries(form.entries()); try { await adminRequest(editingCourse?.id ? `/admin/courses/${editingCourse.id}` : '/admin/courses', editingCourse?.id ? 'PUT' : 'POST', payload); setEditingCourse(null); await loadQuestionBank(token) } catch (requestError) { setError(requestError.message) } }
+    const saveQuestion = async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const payload = Object.fromEntries(form.entries()); try { await adminRequest(editingQuestion.id ? `/admin/courses/${editingQuestion.course_id}/questions/${editingQuestion.id}` : `/admin/courses/${editingQuestion.course_id}/questions`, editingQuestion.id ? 'PUT' : 'POST', payload); setEditingQuestion(null); await loadQuestionBank(token) } catch (requestError) { setError(requestError.message) } }
+    const removeCourse = async (course) => { if (!window.confirm(`Delete ${course.code} and its question bank?`)) return; try { await adminRequest(`/admin/courses/${course.id}`, 'DELETE'); await loadQuestionBank(token) } catch (requestError) { setError(requestError.message) } }
+    const removeQuestion = async (course, question) => { if (!window.confirm(`Delete ${question.question_code}?`)) return; try { await adminRequest(`/admin/courses/${course.id}/questions/${question.id}`, 'DELETE'); await loadQuestionBank(token) } catch (requestError) { setError(requestError.message) } }
+
+    useEffect(() => { if (token) loadQuestionBank(token).catch((requestError) => setError(requestError.message)) }, [token])
+
+    const login = async (event) => {
+        event.preventDefault()
+        setError('')
+        setLoading(true)
+        try {
+            const response = await fetch(`${api}/faculty/login`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ email, password }) })
+            const data = await response.json()
+            if (!response.ok || data.user?.role !== 'admin') throw new Error('Use an administrator account to continue.')
+            localStorage.setItem('relavanet_admin_token', data.token)
+            setToken(data.token)
+        } catch (requestError) { setError(requestError.message) } finally { setLoading(false) }
+    }
+
+    if (!token) return <div className="faculty-page"><a className="back-link" href="/">← Back to Relavanet Uni</a><div className="admin-login-wrap"><div><div className="eyebrow"><span className="eyebrow-dot" /> RELAVANET UNIVERSITY · ADMIN</div><h1>Question bank<br /><em>control.</em></h1><p>Manage visibility across every course and keep assessment content aligned.</p></div><form className="faculty-form" onSubmit={login}><div className="section-label">/ ADMIN SIGN IN</div><h2>Welcome, admin.</h2><label>Administrator email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required /></label><button className="primary-button" type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Open admin dashboard'} <span>↗</span></button>{error && <div className="form-error">{error}</div>}</form></div></div>
+
+    return <div className="admin-page"><header className="dashboard-header"><a className="brand" href="/"><span className="brand-mark">R</span><span>relavanet<span className="brand-light">uni</span></span></a><div><span className="faculty-status">ADMIN CONTROL ROOM</span><button className="logout-link" onClick={() => { localStorage.removeItem('relavanet_admin_token'); setToken(null) }}>Sign out</button></div></header><main className="admin-main"><div className="ledger-title"><span className="ledger-kicker">Registrar's examination record</span><h1>Academic Ledger</h1><p>Question bank and course coverage register</p></div><div className="admin-toolbar"><div className="admin-summary"><strong>{courses.reduce((total, course) => total + course.question_bank.length, 0)}</strong><span>questions · {courses.length} courses</span></div><button className="admin-action primary" onClick={() => setEditingCourse({})}>+ Add course</button></div>{error && <div className="form-error admin-error">{error}</div>}{editingCourse && <CourseEditor course={editingCourse} faculty={faculty} onSave={saveCourse} onCancel={() => setEditingCourse(null)} />}{editingQuestion && <QuestionEditor question={editingQuestion} onSave={saveQuestion} onCancel={() => setEditingQuestion(null)} />}{!editingCourse && !editingQuestion && <div className={`ledger-layout ${selectedQuestion ? 'has-detail' : ''}`}><div className="admin-course-grid">{courses.map((course) => <section className="admin-course" key={course.id}><div className="admin-course-heading"><div><span className="course-code">{course.code}</span><h2>{course.name}</h2><small>{course.user?.name || 'Unassigned owner'}</small></div><div className="admin-course-actions"><strong>{course.question_bank.length}</strong><button className="admin-action" onClick={() => setEditingQuestion({ course_id: course.id })}>+ Question</button><button className="admin-action" onClick={() => setEditingCourse(course)}>Edit</button><button className="admin-action danger" onClick={() => removeCourse(course)}>Delete</button></div></div><div className="question-table"><div className="question-table-head"><span>Question record</span><span>Topic</span><span>Difficulty</span><span>Coverage</span><span>Actions</span></div>{course.question_bank.map((question) => <div className={`question-row ${selectedQuestion?.id === question.id ? 'selected' : ''}`} key={question.id} onClick={() => setSelectedQuestion({ question, course })}><div><strong>{question.question_code}</strong><p>{question.question_text}</p></div><span>{question.topic}</span><span className={`difficulty ${question.difficulty}`}>{question.difficulty}</span><span className="coverage-cell"><span className="coverage-bar"><i style={{ width: `${question.estimated_coverage_percent || 0}%` }} /></span><b>{question.estimated_coverage_percent || 0}%</b></span><div className="row-actions"><button className="admin-action" onClick={(event) => { event.stopPropagation(); setEditingQuestion({ ...question, course_id: course.id }) }}>Edit</button><button className="admin-action danger" onClick={(event) => { event.stopPropagation(); removeQuestion(course, question) }}>Delete</button></div></div>)}</div></section>)}</div>{selectedQuestion && <QuestionLedgerDetail question={selectedQuestion.question} course={selectedQuestion.course} onClose={() => setSelectedQuestion(null)} />}</div>}</main></div>
+}
+
+function CourseEditor({ course, faculty, onSave, onCancel }) { return <form className="admin-editor" onSubmit={onSave}><div className="editor-heading"><div><span className="section-label">/ COURSE {course.id ? 'EDIT' : 'CREATE'}</span><h2>{course.id ? `Edit ${course.code}` : 'Add a course'}</h2></div><button type="button" className="admin-action" onClick={onCancel}>Cancel</button></div><div className="editor-grid"><label>Course code<input name="code" defaultValue={course.code || ''} required /></label><label>Course name<input name="name" defaultValue={course.name || ''} required /></label><label>Faculty owner<select name="user_id" defaultValue={course.user_id || ''} required><option value="">Select faculty</option>{faculty.map((person) => <option value={person.id} key={person.id}>{person.name} · {person.email}</option>)}</select></label><label className="editor-wide">Syllabus<textarea name="syllabus_raw" defaultValue={course.syllabus_raw || ''} rows="4" required /></label></div><button className="primary-button" type="submit">Save course <span>↗</span></button></form> }
+
+function QuestionEditor({ question, onSave, onCancel }) { return <form className="admin-editor" onSubmit={onSave}><div className="editor-heading"><div><span className="section-label">/ QUESTION BANK {question.id ? 'EDIT' : 'CREATE'}</span><h2>{question.id ? `Edit ${question.question_code}` : 'Add a question'}</h2></div><button type="button" className="admin-action" onClick={onCancel}>Cancel</button></div><div className="editor-grid"><label>Question code<input name="question_code" defaultValue={question.question_code || ''} required /></label><label>Topic<input name="topic" defaultValue={question.topic || ''} required /></label><label>Difficulty<select name="difficulty" defaultValue={question.difficulty || 'medium'}><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></label><label>Question type<input name="question_type" defaultValue={question.question_type || 'descriptive'} required /></label><label>Marks<input name="marks" type="number" min="1" max="100" defaultValue={question.marks || ''} /></label><label>Coverage %<input name="estimated_coverage_percent" type="number" min="0" max="100" defaultValue={question.estimated_coverage_percent || ''} /></label><label className="editor-wide">Question text<textarea name="question_text" defaultValue={question.question_text || ''} rows="4" required /></label></div><button className="primary-button" type="submit">Save question <span>↗</span></button></form> }
+
+function QuestionLedgerDetail({ question, course, onClose }) {
+    const levels = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create']
+    const levelIndex = question.difficulty === 'easy' ? 0 : question.question_type === 'coding' || question.question_type === 'design' ? 5 : question.difficulty === 'hard' ? 4 : 2
+    return <aside className="ledger-detail"><div className="detail-heading"><div><span className="ledger-kicker">Question record</span><h2>{question.question_code}</h2></div><button className="ledger-close" type="button" onClick={onClose} aria-label="Close question detail">×</button></div><p className="detail-course">{course.code} · {course.name}</p><p className="detail-question">{question.question_text}</p><div className="detail-rule" /><div className="bloom-block"><span className="ledger-kicker">Bloom's taxonomy</span><div className="bloom-ladder">{levels.map((level, index) => <div className={`bloom-rung ${index === levelIndex ? 'current' : ''}`} key={level}><span>{index + 1}</span><strong>{level}</strong>{index === levelIndex && <em>current level</em>}</div>)}</div></div><div className="outcome-line"><span className="ledger-kicker">Learning outcome</span><strong>{question.topic || 'General course outcome'}</strong><span>Tested once in this question record</span></div></aside>
+}
+
 function FacultyChat({ api = import.meta.env.VITE_API_URL || 'http://localhost:8000/api', token = localStorage.getItem('relavanet_token') }) {
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState('')
@@ -75,7 +137,7 @@ function FacultyDashboard() {
 function AnalysisResult({ result, courseName }) {
     const analysis = result.data
     if (result.type === 'syllabus') return <section className="result-panel"><div className="section-label">/ SYLLABUS DUET RESULT</div><h2>{analysis.overlaps?.length || 0} shared concepts found</h2><p>{analysis.strategic_advice}</p><div className="result-columns"><div><small>UNIQUE TO {analysis.course_a?.code || 'SOURCE A'}</small>{(analysis.unique_to_a || []).map((item) => <span className="result-tag" key={item}>{item}</span>)}</div><div><small>UNIQUE TO {analysis.course_b?.code || 'SOURCE B'}</small>{(analysis.unique_to_b || []).map((item) => <span className="result-tag" key={item}>{item}</span>)}</div></div></section>
-    return <section className="result-panel"><div className="section-label">/ FORENSIC RESULT · {courseName(analysis.course_id)}</div><div className="result-verdict"><div><h2>{analysis.overall_verdict}</h2><p>{analysis.new_question}</p></div><div className="result-score"><strong>{analysis.syllabus_coverage_score}%</strong><small>syllabus alignment</small></div></div><div className="result-columns"><div><small>REUSE SIMILARITY</small><strong className="large-score">{analysis.similarity_score}%</strong></div><div><small>RISK FLAGS</small>{(analysis.risk_flags || []).length ? analysis.risk_flags.map((flag) => <span className="risk-flag" key={flag}>{flag}</span>) : <span className="clear-flag">No risk flags detected.</span>}</div></div></section>
+    return <section className="result-panel"><div className="section-label">/ FORENSIC RESULT · {courseName(analysis.course_id)}</div><div className="result-verdict"><div><h2>{analysis.overall_verdict}</h2><p>{analysis.new_question}</p></div><div className="result-score"><strong>{analysis.syllabus_coverage_score}%</strong><small>syllabus alignment</small></div></div><div className="result-metrics"><div><small>PREVIOUS PAPER SIMILARITY</small><strong>{analysis.similarity_score}%</strong></div><div><small>QUESTION BANK SIMILARITY</small><strong>{analysis.question_bank_similarity_score}%</strong></div><div><small>QUESTION BANK COVERAGE</small><strong>{analysis.question_bank_coverage_score}%</strong></div></div><p className="analysis-summary">{analysis.analysis_summary || 'The report has been generated from the submitted question, syllabus, previous papers, and question bank.'}</p><div className="result-columns"><div><small>QUESTION BANK MATCHES</small>{(analysis.question_bank_matches || []).length ? analysis.question_bank_matches.map((match) => <span className="result-tag" key={match.question_code}>{match.question_code} · {match.similarity_percent}%<br />{match.explanation}</span>) : <span className="clear-flag">No close question-bank matches detected.</span>}</div><div><small>CONTENT COVERED</small>{(analysis.covered_topics || []).map((topic) => <span className="clear-flag" key={topic.topic}>{topic.topic} · {topic.coverage_percent}%</span>)}{(analysis.uncovered_topics || []).map((topic) => <span className="risk-flag" key={topic.topic}>{topic.topic}: {topic.reason}</span>)}</div></div><div className="risk-list"><small>RISK FLAGS</small>{(analysis.risk_flags || []).length ? analysis.risk_flags.map((flag) => <span className="risk-flag" key={flag}>{flag}</span>) : <span className="clear-flag">No risk flags detected.</span>}</div></section>
 }
 
 function App() {
@@ -88,6 +150,7 @@ function App() {
     }, [])
 
     if (window.location.pathname === '/faculty-login') return <FacultyLogin />
+    if (window.location.pathname === '/admin-dashboard') return <AdminDashboard />
     if (window.location.pathname === '/faculty-dashboard') return <><FacultyDashboard /><FacultyChat /></>
 
     const scrollTo = (id) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })

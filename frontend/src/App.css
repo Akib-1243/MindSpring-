@@ -137,6 +137,52 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
 .result-tag { padding: 8px 10px; background: #f5f6f1; }
 .risk-flag { color: #a14732; }
 .clear-flag { color: #45604e; }
+.result-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e5de; }
+.result-metrics>div { padding: 13px; background: #e8eee6; }
+.result-metrics strong { display: block; margin-top: 7px; color: #d76045; font: 700 25px 'Space Grotesk'; }
+.analysis-summary { margin: 20px 0 0; padding: 13px; border-left: 2px solid #e6f04d; background: #f5f6f1; }
+.risk-list { margin-top: 22px; padding-top: 18px; border-top: 1px solid #e0e5de; }
+.risk-list small { display: block; color: #78837b; font: 9px 'DM Mono'; letter-spacing: .8px; }
+.admin-login-wrap { display: grid; grid-template-columns: 1fr 410px; gap: 12vw; align-items: center; width: min(1100px, 100%); min-height: calc(100vh - 90px); margin: auto; }
+.admin-login-wrap h1 { margin: 25px 0; font-size: clamp(50px, 7vw, 88px); }
+.admin-login-wrap>div>p { max-width: 440px; color: #c5d0c6; font-size: 15px; line-height: 1.8; }
+.admin-page { min-height: 100vh; color: #14211c; background: #f5f6f1; }
+.admin-main { width: min(1180px, calc(100% - 56px)); margin: auto; padding: 70px 0 100px; }
+.admin-summary { display: flex; align-items: baseline; gap: 12px; margin: 48px 0 20px; }
+.admin-summary strong { color: #d76045; font: 700 34px 'Space Grotesk'; }
+.admin-summary span { color: #78837b; font-size: 14px; }
+.admin-course-grid { display: grid; gap: 18px; }
+.admin-course { overflow: hidden; border: 1px solid #dfe4dc; border-radius: 10px; background: #fffdf8; }
+.admin-course-heading { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; padding: 22px 24px; border-bottom: 1px solid #dfe4dc; }
+.admin-course-heading h2 { margin: 8px 0 4px; font: 600 21px 'Space Grotesk'; }
+.admin-course-heading small { color: #78837b; font-size: 13px; }
+.admin-course-heading>strong { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; color: #14211c; background: #e6f04d; font: 600 16px 'Space Grotesk'; }
+.question-table-head, .question-row { display: grid; grid-template-columns: minmax(250px, 2fr) 1.1fr .8fr .7fr; gap: 16px; align-items: start; padding: 14px 24px; }
+.question-table-head { color: #78837b; background: #f5f6f1; font: 11px 'DM Mono'; letter-spacing: .7px; }
+.question-row { border-top: 1px solid #edf0ea; color: #65716a; font-size: 14px; }
+.question-row strong { display: block; color: #d76045; font: 12px 'DM Mono'; }
+.question-row p { margin: 6px 0 0; color: #45534b; line-height: 1.5; }
+.difficulty { text-transform: capitalize; }
+.difficulty.hard { color: #a14732; }
+.difficulty.medium { color: #9a7a22; }
+.admin-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.admin-toolbar .admin-summary { margin: 48px 0 20px; }
+.admin-course-actions, .row-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.admin-action { border: 1px solid #cbd4ca; border-radius: 6px; padding: 8px 11px; color: #45534b; background: #fffdf8; cursor: pointer; font: 12px 'Manrope'; }
+.admin-action:hover { border-color: #d76045; color: #d76045; }
+.admin-action.primary { border-color: #e6f04d; color: #14211c; background: #e6f04d; font-weight: 700; }
+.admin-action.danger { color: #a14732; }
+.admin-error { max-width: none; margin: 10px 0 18px; }
+.admin-editor { margin: 22px 0; padding: 26px; border: 1px solid #d76045; border-radius: 10px; background: #fffdf8; }
+.editor-heading { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+.editor-heading h2 { margin: 9px 0 0; font: 600 25px 'Space Grotesk'; }
+.editor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.editor-grid label { display: grid; gap: 8px; color: #45534b; font-size: 13px; font-weight: 700; }
+.editor-grid input, .editor-grid select, .editor-grid textarea { width: 100%; border: 1px solid #d5ddd4; border-radius: 6px; outline: 0; padding: 12px; color: #14211c; background: #f5f6f1; font: 14px 'Manrope'; }
+.editor-grid textarea { resize: vertical; }
+.editor-grid input:focus, .editor-grid select:focus, .editor-grid textarea:focus { border-color: #d76045; }
+.editor-wide { grid-column: 1 / -1; }
+.admin-editor .primary-button { margin-top: 22px; }
 .history-section { max-width: 900px; margin-top: 70px; }
 .history-heading { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; }
 .history-heading h2 { margin: 12px 0 0; font: 600 28px 'Space Grotesk'; }
@@ -214,4 +260,97 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
     .faculty-chat { right: 24px; bottom: 30px; }
     .faculty-chat-launcher { width: 54px; height: 54px; }
     .faculty-chat-panel { width: min(350px, calc(100vw - 40px)); height: min(450px, calc(100vh - 110px)); }
+}
+@media (max-width: 800px) {
+    .admin-login-wrap { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding: 70px 0 50px; }
+    .admin-login-wrap h1 { font-size: 58px; }
+    .admin-main { width: min(100% - 40px, 600px); padding-top: 55px; }
+    .result-metrics { grid-template-columns: 1fr; }
+    .question-table { overflow-x: auto; }
+    .question-table-head, .question-row { min-width: 650px; }
+    .admin-toolbar { align-items: flex-start; flex-direction: column; }
+    .admin-toolbar .admin-summary { margin: 30px 0 0; }
+    .editor-grid { grid-template-columns: 1fr; }
+    .editor-wide { grid-column: auto; }
+    .admin-course-actions { justify-content: flex-start; margin-top: 14px; }
+    .admin-course-heading { display: block; }
+}
+
+/* Academic Ledger */
+.admin-page { min-height: 100vh; color: #1c2430; background: #f7f5f0; font-family: 'IBM Plex Sans', sans-serif; }
+.admin-page .dashboard-header { border-bottom: 1px solid #1c2430; background: #f7f5f0; }
+.admin-page .brand { color: #1c2430; }
+.admin-page .brand-mark { color: #f7f5f0; background: #1c2430; }
+.admin-page .faculty-status, .admin-page .logout-link { color: #1c2430; font-family: 'IBM Plex Sans', sans-serif; }
+.admin-main { width: min(1240px, calc(100% - 80px)); padding: 74px 0 110px; }
+.ledger-title { padding-bottom: 28px; border-bottom: 1px solid #1c2430; }
+.ledger-kicker { color: #1c2430; font: 500 12px 'IBM Plex Sans'; letter-spacing: .04em; }
+.ledger-title h1 { margin: 13px 0 7px; color: #1c2430; font: 600 clamp(42px, 6vw, 74px)/1.02 'Lora', serif; letter-spacing: -1.8px; }
+.ledger-title p { margin: 0; color: #1c2430; font: 400 16px 'IBM Plex Sans'; }
+.admin-toolbar { border-bottom: 1px solid #1c2430; }
+.admin-summary { margin: 22px 0 20px; }
+.admin-summary strong { color: #1c2430; font: 600 29px 'IBM Plex Sans'; font-variant-numeric: tabular-nums; }
+.admin-summary span { color: #1c2430; font: 400 14px 'IBM Plex Sans'; }
+.admin-page .admin-action { border: 1px solid #1c2430; border-radius: 0; color: #1c2430; background: transparent; font: 500 13px 'IBM Plex Sans'; }
+.admin-page .admin-action:hover { border-color: #6b2d2d; color: #6b2d2d; }
+.admin-page .admin-action.primary { border-color: #1c2430; color: #f7f5f0; background: #1c2430; }
+.admin-page .admin-action.danger { color: #6b2d2d; }
+.ledger-layout { display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 30px; }
+.ledger-layout.has-detail { grid-template-columns: minmax(0, 1.55fr) minmax(310px, .75fr); align-items: start; }
+.admin-course-grid { gap: 32px; }
+.admin-course { overflow: visible; border: 0; border-top: 1px solid #1c2430; border-radius: 0; background: transparent; }
+.admin-course:last-child { border-bottom: 1px solid #1c2430; }
+.admin-course-heading { padding: 18px 0 16px; border-bottom: 1px solid #1c2430; }
+.course-code { color: #1c2430; font: 600 12px 'IBM Plex Sans'; letter-spacing: .08em; }
+.admin-course-heading h2 { margin: 7px 0 3px; color: #1c2430; font: 600 25px 'Lora', serif; letter-spacing: -.3px; }
+.admin-course-heading small { color: #1c2430; font: 400 14px 'Lora', serif; }
+.admin-course-heading>div:first-child { min-width: 0; }
+.admin-course-heading>div:first-child small { display: block; }
+.admin-course-heading>div:last-child { align-items: center; }
+.admin-course-heading>strong { width: auto; height: auto; border-radius: 0; color: #1c2430; background: transparent; font: 500 14px 'IBM Plex Sans'; font-variant-numeric: tabular-nums; }
+.question-table-head, .question-row { grid-template-columns: minmax(260px, 2.1fr) 1.05fr .8fr 1fr minmax(150px, .9fr); gap: 18px; padding: 12px 0; }
+.question-table-head { color: #1c2430; background: transparent; font: 500 11px 'IBM Plex Sans'; letter-spacing: .02em; }
+.question-row { border-top: 1px solid #a7adb3; color: #1c2430; font: 400 14px 'IBM Plex Sans'; cursor: pointer; }
+.question-row:hover, .question-row.selected { background: #eeece5; }
+.question-row strong { color: #1c2430; font: 500 12px 'IBM Plex Sans'; font-variant-numeric: tabular-nums; }
+.question-row p { margin: 6px 0 0; color: #1c2430; font: 400 15px/1.5 'Lora', serif; }
+.difficulty { font-family: 'IBM Plex Sans'; font-variant-numeric: tabular-nums; }
+.difficulty.hard { color: #6b2d2d; }
+.difficulty.medium { color: #9a7626; }
+.coverage-cell { display: flex; align-items: center; gap: 9px; min-width: 100px; }
+.coverage-cell b { min-width: 38px; color: #1c2430; font: 500 13px 'IBM Plex Sans'; font-variant-numeric: tabular-nums; text-align: right; }
+.coverage-bar { display: block; flex: 1; height: 4px; min-width: 45px; background: #d8d5cc; }
+.coverage-bar i { display: block; height: 100%; background: #8a9a7e; }
+.question-row:nth-child(3n) .coverage-bar i { background: #c9a24b; }
+.question-row:nth-child(4n) .coverage-bar i { background: #6b2d2d; }
+.row-actions { justify-content: flex-start; }
+.row-actions .admin-action { padding: 5px 8px; font-size: 12px; }
+.ledger-detail { position: sticky; top: 25px; border-top: 1px solid #1c2430; border-bottom: 1px solid #1c2430; padding: 18px 0 25px; background: #f7f5f0; }
+.detail-heading { display: flex; justify-content: space-between; align-items: start; }
+.detail-heading h2 { margin: 8px 0 0; color: #1c2430; font: 600 23px 'IBM Plex Sans'; font-variant-numeric: tabular-nums; }
+.ledger-close { border: 0; color: #1c2430; background: transparent; cursor: pointer; font: 400 25px 'IBM Plex Sans'; }
+.detail-course { margin: 18px 0 0; color: #1c2430; font: 400 14px 'Lora', serif; }
+.detail-question { margin: 24px 0; color: #1c2430; font: 400 21px/1.55 'Lora', serif; }
+.detail-rule { border-top: 1px solid #1c2430; }
+.bloom-block { padding: 20px 0; }
+.bloom-ladder { margin-top: 13px; border-top: 1px solid #a7adb3; }
+.bloom-rung { display: flex; align-items: center; gap: 11px; min-height: 31px; border-bottom: 1px solid #a7adb3; color: #737a83; font: 400 13px 'IBM Plex Sans'; }
+.bloom-rung span { width: 20px; color: #737a83; font-variant-numeric: tabular-nums; }
+.bloom-rung strong { font-weight: 500; }
+.bloom-rung.current { color: #1c2430; }
+.bloom-rung.current span { color: #6b2d2d; }
+.bloom-rung.current strong { color: #6b2d2d; }
+.bloom-rung em { margin-left: auto; color: #6b2d2d; font: 400 11px 'IBM Plex Sans'; }
+.outcome-line { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; padding-top: 19px; border-top: 1px solid #1c2430; }
+.outcome-line strong { color: #1c2430; font: 500 15px 'Lora', serif; }
+.outcome-line>span:last-child { grid-column: 2; color: #1c2430; font: 400 13px 'IBM Plex Sans'; }
+.admin-page .admin-editor { border: 1px solid #1c2430; border-radius: 0; background: transparent; }
+.admin-page .editor-heading h2 { font: 600 24px 'Lora', serif; }
+.admin-page .editor-grid label { color: #1c2430; font: 500 13px 'IBM Plex Sans'; }
+.admin-page .editor-grid input, .admin-page .editor-grid select, .admin-page .editor-grid textarea { border: 1px solid #1c2430; border-radius: 0; color: #1c2430; background: transparent; font: 400 15px 'IBM Plex Sans'; }
+.admin-page .primary-button { border-radius: 0; color: #f7f5f0; background: #1c2430; }
+@media (max-width: 900px) {
+    .admin-main { width: min(100% - 40px, 720px); }
+    .ledger-layout.has-detail { grid-template-columns: 1fr; }
+    .ledger-detail { position: relative; top: auto; }
 }
