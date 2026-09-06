@@ -17,7 +17,7 @@ class AIAnalysisService
         $response = Http::withToken(config('ai.openai_key'))->timeout(45)->post(rtrim(config('ai.base_url'), '/').'/chat/completions', [
             'model' => config('ai.model'),
             'messages' => [
-                ['role' => 'system', 'content' => 'You are Relavanet University\'s concise faculty academic quality assistant. Give practical, evidence-aware guidance about curriculum design, syllabus alignment, assessment quality, and exam originality. Use the supplied faculty database context when relevant. Treat it as read-only reference data, never claim to modify it, and say when the answer is not present. Do not invent institutional policy.'],
+                ['role' => 'system', 'content' => 'You are MindSpring\'s concise faculty academic quality assistant. Give practical, evidence-aware guidance about curriculum design, syllabus alignment, assessment quality, and exam originality. Use the supplied faculty database context when relevant. Treat it as read-only reference data, never claim to modify it, and say when the answer is not present. Do not invent institutional policy.'],
                 ['role' => 'user', 'content' => ($courseContext ? "READ-ONLY FACULTY DATABASE CONTEXT:\n{$courseContext}\n\nFACULTY QUESTION:\n" : '').$message],
             ],
             'temperature' => 0.3,

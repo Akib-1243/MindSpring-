@@ -33,4 +33,4 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::delete('/courses/{course}/questions/{question}', [AdminController::class, 'destroyQuestion']);
 });
 
-Route::get('/health', fn () => ['status' => 'ok', 'service' => 'relavanet-academic-quality-suite']);
+Route::get('/health', fn () => ['status' => 'ok', 'service' => 'mindspring-academic-quality-suite']);

@@ -3,6 +3,19 @@
 .nav { display: flex; justify-content: space-between; align-items: center; padding: 28px 0; position: relative; z-index: 5; }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: #14211c; font: 700 20px 'Space Grotesk'; letter-spacing: -1px; }
 .brand-mark { display: grid; place-items: center; width: 29px; height: 29px; color: #14211c; background: #e6f04d; border-radius: 9px 9px 9px 3px; font: 800 18px 'Space Grotesk'; transform: rotate(-8deg); }
+.brand-mark { font-size: 0; }
+.brand-mark::after { content: 'M'; font: 800 18px 'Space Grotesk'; }
+.brand > span:nth-child(2) { font-size: 0; }
+.brand > span:nth-child(2)::after { content: 'MindSpring'; font-size: 20px; letter-spacing: -1px; }
+.side-panel .section-label { font-size: 12px; }
+.side-panel .panel-heading h3 { font-size: 27px; line-height: 1.2; }
+.side-panel .subject { gap: 14px; padding: 16px 0; }
+.side-panel .subject-icon { width: 38px; height: 38px; font-size: 12px; }
+.side-panel .subject strong { font-size: 15px; }
+.side-panel .subject small { font-size: 13px; }
+.side-panel .subject .arrow { font-size: 18px; }
+.side-panel .learners-overlay strong { font-size: 36px; }
+.side-panel .learners-overlay span:not(.plus) { font-size: 10px; }
 .brand-light { color: #78837b; font-weight: 500; }
 .nav-links { display: flex; align-items: center; gap: 34px; color: #65716a; font-size: 14px; font-weight: 600; }
 .nav-links a { transition: color .25s; }
