@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Department;
 use App\Models\ExamAnalysis;
 use App\Models\PastPaper;
 use App\Models\SyllabusAnalysis;
@@ -15,6 +16,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $cseDepartment = Department::updateOrCreate(['code' => 'CSE'], ['name' => 'Computer Science and Engineering']);
+        $eeeDepartment = Department::updateOrCreate(['code' => 'EEE'], ['name' => 'Electrical and Electronics Engineering']);
         $password = Hash::make('relavanet-demo');
         $cseFaculty = User::updateOrCreate(
             ['email' => 'faculty@relavanet.edu'],
@@ -31,16 +34,16 @@ class DatabaseSeeder extends Seeder
 
         $courses = [];
         foreach ([
-            [$cseFaculty, 'CSE101', 'Programming Fundamentals', 'Variables, control flow, functions, arrays, pointers, recursion, debugging, and object-oriented programming using C.'],
-            [$cseFaculty, 'CSE202', 'Data Structures and Algorithms', 'Complexity analysis, linked lists, stacks, queues, trees, graphs, sorting, searching, hashing, and algorithm design.'],
-            [$cseFaculty, 'CSE401', 'Responsible Artificial Intelligence', 'Machine learning foundations, model evaluation, fairness, explainability, governance, and applied case studies.'],
-            [$eeeFaculty, 'EEE101', 'Circuit Theory', 'Ohm law, Kirchhoff laws, network theorems, transient response, AC circuits, resonance, and two-port networks.'],
-            [$eeeFaculty, 'EEE203', 'Digital Electronics', 'Boolean algebra, logic gates, combinational circuits, sequential circuits, counters, registers, memories, and programmable logic.'],
-            [$eeeFaculty, 'EEE402', 'Power Systems Engineering', 'Power generation, transmission lines, load flow, fault analysis, protection, stability, and renewable grid integration.'],
-        ] as [$owner, $code, $name, $syllabus]) {
+            [$cseFaculty, $cseDepartment, 'CSE101', 'Programming Fundamentals', 'Variables, control flow, functions, arrays, pointers, recursion, debugging, and object-oriented programming using C.'],
+            [$cseFaculty, $cseDepartment, 'CSE202', 'Data Structures and Algorithms', 'Complexity analysis, linked lists, stacks, queues, trees, graphs, sorting, searching, hashing, and algorithm design.'],
+            [$cseFaculty, $cseDepartment, 'CSE401', 'Responsible Artificial Intelligence', 'Machine learning foundations, model evaluation, fairness, explainability, governance, and applied case studies.'],
+            [$eeeFaculty, $eeeDepartment, 'EEE101', 'Circuit Theory', 'Ohm law, Kirchhoff laws, network theorems, transient response, AC circuits, resonance, and two-port networks.'],
+            [$eeeFaculty, $eeeDepartment, 'EEE203', 'Digital Electronics', 'Boolean algebra, logic gates, combinational circuits, sequential circuits, counters, registers, memories, and programmable logic.'],
+            [$eeeFaculty, $eeeDepartment, 'EEE402', 'Power Systems Engineering', 'Power generation, transmission lines, load flow, fault analysis, protection, stability, and renewable grid integration.'],
+        ] as [$owner, $department, $code, $name, $syllabus]) {
             $courses[$code] = Course::updateOrCreate(
                 ['code' => $code],
-                ['user_id' => $owner->id, 'name' => $name, 'syllabus_raw' => $syllabus]
+                ['user_id' => $owner->id, 'department_id' => $department->id, 'name' => $name, 'syllabus_raw' => $syllabus]
             );
         }
 

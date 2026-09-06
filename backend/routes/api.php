@@ -25,6 +25,7 @@ Route::prefix('faculty')->group(function () {
 
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/question-bank', [AdminController::class, 'questionBank']);
+    Route::post('/faculty', [AdminController::class, 'storeFaculty']);
     Route::post('/courses', [AdminController::class, 'storeCourse']);
     Route::put('/courses/{course}', [AdminController::class, 'updateCourse']);
     Route::delete('/courses/{course}', [AdminController::class, 'destroyCourse']);
