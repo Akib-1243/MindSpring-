@@ -103,9 +103,15 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
 .form-error { margin-top: 18px; padding: 12px; color: #914331; background: #f5e7e2; font-size: 13px; line-height: 1.5; }
 .dashboard-page { min-height: 100vh; background: #f5f6f1; color: #14211c; }
 .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding: 28px max(28px, 6vw); border-bottom: 1px solid #dfe4dc; background: #fffdf8; }
+.dashboard-page .dashboard-header { border-bottom-color: #14211c; background: #14211c; }
+.dashboard-page .dashboard-header .brand { color: #f5f6f1; }
+.dashboard-page .dashboard-header .brand-mark { color: #14211c; background: #e6f04d; }
+.dashboard-page .dashboard-header .brand-light { color: #a9b8ac; }
 .dashboard-header>div { display: flex; align-items: center; gap: 25px; }
 .faculty-status { color: #78837b; font: 10px 'DM Mono'; letter-spacing: 1px; }
+.dashboard-page .faculty-status { color: #b8c5ba; }
 .logout-link { border: 0; padding: 0; color: #d76045; background: transparent; cursor: pointer; font-size: 13px; font-weight: 700; }
+.dashboard-page .logout-link { color: #e6f04d; }
 .dashboard-main { width: min(1100px, calc(100% - 56px)); margin: auto; padding: 75px 0 100px; }
 .dashboard-intro h1 { margin: 18px 0; font: 600 clamp(42px, 6vw, 68px)/.98 'Space Grotesk'; letter-spacing: -3px; }
 .dashboard-intro h1 em { color: #d76045; font-style: normal; }
@@ -354,3 +360,67 @@ h1 { margin-bottom: 24px; font: 700 clamp(40px, 5vw, 70px)/.98 'Space Grotesk'; 
     .ledger-layout.has-detail { grid-template-columns: 1fr; }
     .ledger-detail { position: relative; top: auto; }
 }
+
+/* Faculty dashboard language carried into the Academic Ledger. */
+.admin-page { position: relative; overflow: hidden; color: #14211c; background: #f5f6f1; }
+.admin-page::before { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .34; background-image: linear-gradient(#dfe4dc 1px, transparent 1px); background-size: 100% 42px; content: ''; }
+.admin-page>* { position: relative; z-index: 1; }
+.admin-page .dashboard-header { color: #f5f6f1; border-bottom-color: #14211c; background: #14211c; }
+.admin-page .brand { color: #f5f6f1; }
+.admin-page .brand-mark { color: #14211c; background: #e6f04d; }
+.admin-page .brand-light { color: #a9b8ac; }
+.admin-page .faculty-status { color: #b8c5ba; }
+.admin-page .logout-link { color: #e6f04d; }
+.admin-main { padding-top: 86px; }
+.ledger-title { border-bottom-color: #14211c; animation: ledger-enter .6s ease-out both; }
+.ledger-kicker { color: #78837b; }
+.ledger-title h1 { color: #14211c; font-family: 'Space Grotesk', sans-serif; letter-spacing: -3px; }
+.ledger-title h1::first-letter { color: #14211c; }
+.ledger-title p { color: #65716a; }
+.ledger-title p::after { display: inline-block; width: 7px; height: 7px; margin-left: 9px; border-radius: 50%; background: #e6f04d; content: ''; }
+.admin-toolbar { border-bottom-color: #dfe4dc; }
+.admin-summary strong { color: #d76045; font-family: 'Space Grotesk', sans-serif; }
+.admin-summary span { color: #78837b; }
+.admin-page .admin-action { border-color: #cbd4ca; color: #14211c; background: #fffdf8; transition: transform .2s, border-color .2s, background .2s; }
+.admin-page .admin-action:hover { border-color: #d76045; color: #14211c; background: #f5e7e2; transform: translateY(-2px); }
+.admin-page .admin-action.primary { border-color: #e6f04d; color: #14211c; background: #e6f04d; }
+.admin-page .admin-action.primary:hover { border-color: #e6f04d; background: #f1f795; }
+.admin-course-grid { gap: 26px; }
+.admin-course { border-top-color: #dfe4dc; background: #fffdf8; animation: ledger-enter .5s ease-out both; }
+.admin-course:nth-child(2) { animation-delay: .08s; }
+.admin-course:nth-child(3) { animation-delay: .16s; }
+.admin-course:nth-child(4) { animation-delay: .24s; }
+.admin-course:last-child { border-bottom-color: #dfe4dc; }
+.admin-course-heading { padding: 22px 24px 18px; border-bottom-color: #dfe4dc; }
+.course-code { color: #78837b; }
+.admin-course-heading h2 { color: #14211c; font-family: 'Space Grotesk', sans-serif; letter-spacing: -.7px; }
+.admin-course-heading small { color: #78837b; font-family: 'Manrope', sans-serif; }
+.admin-course-heading>strong { color: #14211c; }
+.question-table-head { color: #78837b; background: #edf1e8; font-family: 'DM Mono', monospace; }
+.question-row { border-top-color: #e0e5de; color: #45534b; transition: background .2s, transform .2s; }
+.question-row:hover, .question-row.selected { background: #fffdf8; box-shadow: inset 4px 0 #e6f04d; transform: translateX(3px); }
+.question-row strong { color: #d76045; font-family: 'DM Mono', monospace; }
+.question-row p { color: #45534b; font-family: 'Manrope', sans-serif; }
+.difficulty.hard { color: #a14732; }
+.difficulty.medium { color: #9a7a22; }
+.coverage-bar { background: #e0e5de; }
+.coverage-bar i { background: #8a9a7e; }
+.question-row:nth-child(3n) .coverage-bar i { background: #e1b6a7; }
+.question-row:nth-child(4n) .coverage-bar i { background: #d76045; }
+.ledger-detail { border-color: #d76045; padding: 22px 24px 28px; background: #fffdf8; animation: detail-enter .3s ease-out both; }
+.detail-heading h2 { color: #14211c; font-family: 'Space Grotesk', sans-serif; }
+.ledger-close { color: #14211c; }
+.ledger-close:hover { color: #d76045; }
+.detail-course { color: #78837b; font-family: 'Manrope', sans-serif; }
+.detail-question { color: #14211c; font-family: 'Space Grotesk', sans-serif; font-size: 20px; }
+.detail-rule, .outcome-line { border-color: #dfe4dc; }
+.bloom-rung { border-bottom-color: #e0e5de; }
+.bloom-rung.current { color: #14211c; background: #edf1e8; }
+.bloom-rung.current span, .bloom-rung.current strong, .bloom-rung.current em { color: #d76045; }
+.outcome-line strong { color: #14211c; font-family: 'Space Grotesk', sans-serif; }
+.outcome-line>span:last-child { color: #78837b; }
+.admin-page .admin-editor { border-color: #dfe4dc; background: #fffdf8; }
+.admin-page .editor-heading h2 { font-family: 'Space Grotesk', sans-serif; }
+.admin-page .editor-grid input, .admin-page .editor-grid select, .admin-page .editor-grid textarea { border-color: #d5ddd4; background: #f5f6f1; }
+@keyframes ledger-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes detail-enter { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
